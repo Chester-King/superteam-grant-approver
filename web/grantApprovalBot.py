@@ -47,7 +47,8 @@ async def add_approver(ctx, channelID: str, userID: str):
         print('This is a Channel message, cannot respond to it!')
         
 @bot.command(name='channel_add')
-async def add_channel(ctx, channelID: str, name: str):
+async def add_channel(ctx, channelID: str,*, name: str):
+    
     if ctx.message.channel.type == discord.ChannelType.private:
         # this is a dm
         if ctx.message.author.id == int(superAdminUserID):
@@ -90,6 +91,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    
+
     if message.author == client.user:
         return
 
