@@ -41,6 +41,8 @@ async def add_approver(ctx, channelID: str, userID: str):
                 await ctx.send('User has been added as an approver for the Channel')
             else:
                 await ctx.send('The user could not be added, please check the Channel ID entered!')
+        else:
+            await ctx.send('You are not the superadmin!')
             
     elif ctx.message.channel.type == discord.ChannelType.text:
         # this is a guild/channel message
@@ -54,6 +56,8 @@ async def add_channel(ctx, channelID: str,*, name: str):
         if ctx.message.author.id == int(superAdminUserID):
             addChannel(channelID, name)
             await ctx.send('Channel added to be monitored!')
+        else:
+            await ctx.send('You are not the superadmin!')
 
 @bot.event
 async def on_reaction_add(reaction, user):
