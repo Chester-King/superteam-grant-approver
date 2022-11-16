@@ -65,8 +65,11 @@ async def on_reaction_add(reaction, user):
     channelID = reaction.message.channel.id
     print(f'channel id = {channelID}, user id = {reactorID}')
     print(reaction.message.author.id,"----",grantBotUserID)
+    print(reaction.message.author)
+    print(reaction.message.author.display_name)
+    print(reaction.message.author.bot)
     if reaction.emoji == '✅':
-        if str(reaction.message.author.id) == grantBotUserID:
+        if(str(reaction.message.author.display_name) == "GrantBot" and reaction.message.author.bot):
             print('message is authored by the bot!')
             if isUserApproved(channelID, reactorID):
                 print('user is approvable, grant to be approved!')
@@ -77,7 +80,7 @@ async def on_reaction_add(reaction, user):
             
     elif reaction.emoji == '❌':
         
-        if str(reaction.message.author.id) == grantBotUserID:
+        if(str(reaction.message.author.display_name) == "GrantBot" and reaction.message.author.bot):
             print('message is authored by the bot!')
             if isUserApproved(channelID, reactorID):
                 print('User is Approvable, grant to be denied!')
