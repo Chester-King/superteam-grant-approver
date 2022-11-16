@@ -1,1 +1,3 @@
 web/.env
+web/.env-test
+.DS_Store

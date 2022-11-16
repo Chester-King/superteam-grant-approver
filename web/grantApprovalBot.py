@@ -64,6 +64,7 @@ async def on_reaction_add(reaction, user):
     reactorID = user.id
     channelID = reaction.message.channel.id
     print(f'channel id = {channelID}, user id = {reactorID}')
+    print(reaction.message.author.id,"----",grantBotUserID)
     if reaction.emoji == '✅':
         if str(reaction.message.author.id) == grantBotUserID:
             print('message is authored by the bot!')
@@ -96,6 +97,7 @@ async def on_ready():
 @client.event
 async def on_message(message):
     
+    print(message)
 
     if message.author == client.user:
         return

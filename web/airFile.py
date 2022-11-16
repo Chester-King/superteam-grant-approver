@@ -30,8 +30,10 @@ def addApprover(channelID, userID, flag):
         fields = channel['fields']
         fieldDict = dict(fields)
         if(fieldDict['Channel ID'] == (channelID)):
-            fieldDict['Approvers'] += ', ' + userID
-            at.update(airtableChannelTableName, channel['id'], fieldDict)
+            print("Found!")
+            n={}
+            n['Approvers'] = fieldDict['Approvers'] + ', ' + userID
+            at.update(airtableChannelTableName, channel['id'], n)
             flag = True
             
     return flag           
@@ -71,55 +73,32 @@ def parseText(message):
             return recNo[1]
     
 def rejectGrant(message):
-    table = at.get(airtableGrantTableName,view=viewUndecided)
-    records = table['records']
     messageRecordID = parseText(message)
+    table = at.get(airtableGrantTableName,record_id=messageRecordID)
+    # records = table['records']
     print(f'messageRecordID: {messageRecordID}')
     
-    for grant in records:
-        #print(grant)
-        fields = grant['fields']
-        fieldDict = dict(fields)
-        #print(f'\n\n{fieldDict}\n')
-        recordID = fieldDict['RecordID']
-        status = fieldDict['Status']
-        submitter = fieldDict['Submitter']
-        print(f'OG ID: {grant["id"]}, submitter: {submitter}, record ID: {recordID}, status: {status}')
-        if messageRecordID == recordID:
-            if status == 'Undecided':
-                n={}
-                n['Status'] = 'Rejected'
-                fieldDict['Status'] = 'Rejected'
-                at.update(airtableGrantTableName, grant['id'], n)
-                print('Grant set as Rejected!')
-            else:
-                print('Grant already handled!')
-            break
+    if(table['fields']['Status'] == 'Undecided'):
+        n={}
+        n['Status'] = 'Rejected'
+        at.update(airtableGrantTableName, messageRecordID, n)
+        print('Grant has been rejected!')
+    else:
+        print('Grant already handled!')
 
 
 def acceptGrant(message):
     # write to airtable for grant approved!
-    table = at.get(airtableGrantTableName,view=viewUndecided)
-    records = table['records']
     messageRecordID = parseText(message)
+    table = at.get(airtableGrantTableName,record_id=messageRecordID)
+    # records = table['records']
     print(f'messageRecordID: {messageRecordID}')
     
-    for grant in records:
-        #print(grant)
-        fields = grant['fields']
-        fieldDict = dict(fields)
-        #print(f'\n\n{fieldDict}\n')
-        recordID = fieldDict['RecordID']
-        status = fieldDict['Status']
-        submitter = fieldDict['Submitter']
-        print(f'OG ID: {grant["id"]}, submitter: {submitter}, record ID: {recordID}, status: {status}')
-        if messageRecordID == recordID:
-            if status == 'Undecided':
-                n={}
-                n['Status'] = 'Accepted'
-                at.update(airtableGrantTableName, grant['id'], n)
-                print('Grant set as Accepted!')
-            else:
-                print('Grant already handled!')
-            break
+    if(table['fields']['Status'] == 'Undecided'):
+        n={}
+        n['Status'] = 'Accepted'
+        at.update(airtableGrantTableName, messageRecordID, n)
+        print('Grant has been accepted!')
+    else:
+        print('Grant already handled!')
     #print('Grant added to approved list!')
